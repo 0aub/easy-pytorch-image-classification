@@ -50,9 +50,9 @@ if __name__ == '__main__':
     if args.use_comet:
         from comet_ml import Experiment
         # connection
-        api_key = args.comet_api_key if args.comet_api_key else 'VXUebUEExN1pBNNI4waub6m09'
-        project_name = args.comet_project_name if args.comet_project_name else 'medical-classification'
-        workspace = args.comet_workspace if args.comet_workspace else '0aub'
+        api_key = args.comet_api_key if args.comet_api_key else 'APY_KEY'
+        project_name = args.comet_project_name if args.comet_project_name else 'PROJECT_NAME'
+        workspace = args.comet_workspace if args.comet_workspace else 'WORKSPACE'
         experiment_name = args.comet_experiment_name if args.comet_experiment_name else args.model_name
         # create experiment
         experiment = Experiment(
