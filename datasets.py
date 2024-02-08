@@ -90,6 +90,7 @@ class ImageDataset():
             self.images_folder_path = os.path.join(base_images_folder_path, dataset_name)
 
         self.name = dataset_name.lower()
+        self.zip_file = self.name + '.zip'
         self.download_path = base_download_path
         self.unzip_path = base_images_folder_path
         self.splitted_data_path = os.path.join(base_splitted_data_path, dataset_name)
