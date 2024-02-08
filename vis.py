@@ -3,14 +3,11 @@
 #  +-+ +-+ +-+ +-+ +-+ +-+
 
 import torch
-
 import numpy as np
 import pandas as pd
 from sklearn.metrics import confusion_matrix
-
-import seaborn as sns
 import matplotlib.pyplot as plt
-
+import seaborn as sns
 import os
 
 from networks import pretrained_network
@@ -135,7 +132,6 @@ def cm_plot(dataset, model_name, epochs, save_path='./results/vis'):
     cmn = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
     # to dataframe
     df_cm = pd.DataFrame(cmn/np.sum(cmn) *10, index = [i for i in dataset.classes], columns = [i for i in dataset.classes])
-    
     # plot
     fig, ax = plt.subplots(figsize=(10,10))
     sns.heatmap(cmn, annot=True, fmt='.2f', xticklabels=dataset.classes, yticklabels=dataset.classes, cmap='Blues')

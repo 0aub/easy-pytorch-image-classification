@@ -4,11 +4,9 @@
 
 import torch
 from torch.nn import CrossEntropyLoss
-
-import numpy as np
-import pandas as pd
-
 from tqdm import tqdm
+import pandas as pd
+import numpy as np
 import time
 import copy
 import os

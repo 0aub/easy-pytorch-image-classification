@@ -5,9 +5,7 @@
 import torch
 from torch.nn import CrossEntropyLoss
 from torch.optim import SGD, lr_scheduler
-
 import pandas as pd
-
 import os
 
 from training import train, evaluate

@@ -3,7 +3,6 @@
 #  +-+ +-+ +-+ +-+ +-+ +-+
 
 import argparse
-import os
 
 from main import main
 from training import evaluation_summary
@@ -30,7 +29,7 @@ if __name__ == '__main__':
     # hyperparameters
     parser.add_argument("-epc",'--epochs', help='training iteration number', default=100, type=int)
     parser.add_argument("-bs",'--batch_size', help='training/evaluation batch size', default=16, type=int)
-    parser.add_argument("-is",'--image_size', help='image size to resize', default=256, type=int)
+    parser.add_argument("-is",'--image_size', help='image size to resize', default=224, type=int)
     parser.add_argument("-lr",'--learning_rate', help='training learning rate ', default=0.0001, type=float)
     # extra
     parser.add_argument("-nsv","--no-save", help="save the model and training history (default: False)", default=False, action="store_true")
@@ -68,7 +67,7 @@ if __name__ == '__main__':
         comet = None
         
     if not (args.train or args.eval or args.eval_summary):
-        print('please run the file properly. for more information: https://github.com/0aub/pytorch-image-classification')
+        print('please run the file properly. for more information: https://github.com/0aub/easy-pytorch-image-classification')
     if args.train or args.eval:
         main(args.exp, args.dataset_name, args.model_name, args.train, args.eval, not args.no_save, not args.no_overwrite, 
              args.batch_size, args.image_size, args.learning_rate, args.epochs, not args.no_printing, False, args.checkpoints_path, args.log_path, args.evals_path, comet)
