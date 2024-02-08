@@ -147,7 +147,7 @@ def train(model, criterion, optimizer, scheduler, dataset, device, num_epochs=10
             best_model_wts = copy.deepcopy(model.state_dict())
         else:
             if printing:
-                print("\tval_acc did not improve from {:.4f}".format(best_acc))
+                print("\n\tval_acc did not improve from {:.4f}".format(best_acc))
         # save progress in history
         history['epoch'].append(epoch+1)
         history['loss'].append(round(np.float64(avg_loss).item(), 4))

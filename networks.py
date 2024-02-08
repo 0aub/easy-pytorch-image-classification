@@ -31,36 +31,57 @@ def prepare_model(model_name, model, n_classes):
         param.require_grad = False
 
     # Replace the final classification layer with a new one with the specified number of classes
-    if any(x in model_name for x in ['alexnet', 'vgg']):
+    if any(x in model_name for x in ['alexnet']):
         num_features = model.classifier[6].in_features
-        features = list(model.classifier.children())[:-1] # Remove last layer
-        features.extend([Linear(num_features, n_classes)]) # Add our layer with n_classes outputs
-        model.classifier = Sequential(*features) # Replace the model classifier
-    elif any(x in model_name for x in ['convnext', 'mnasnet']):
-        num_features = model.classifier[-1].in_features
-        model.classifier[-1] = Linear(num_features, n_classes)
-    elif any(x in model_name for x in ['densenet', 'efficientnet']):
-        num_features = model.classifier.in_features
-        model.classifier = Linear(num_features, n_classes)
-    elif any(x in model_name for x in ['googlenet', 'inception', 'resnet', 'resnext', 'shufflenet']):
+        model.classifier[6] = torch.nn.Linear(num_features, n_classes)
+    if any(x in model_name for x in ['vgg']):
+        num_features = model.classifier[6].in_features
+        model.classifier[6] = torch.nn.Linear(num_features, n_classes)
+    elif any(x in model_name for x in ['convnext', 'resnet', 'resnext', 'shufflenet']):
         num_features = model.fc.in_features
-        model.fc = Linear(num_features, n_classes)
-    elif any(x in model_name for x in ['maxvit', 'swin', 'vit']):
-        num_features = model.head.in_features
-        model.head = Linear(num_features, n_classes)
-    elif any(x in model_name for x in ['mobilenet']):
+        model.fc = torch.nn.Linear(num_features, n_classes)
+    elif any(x in model_name for x in ['mnasnet', 'densenet']):
+        num_features = model.classifier.in_features
+        model.classifier = torch.nn.Linear(num_features, n_classes)
+    elif any(x in model_name for x in ['mobilenet_v3']):
+        num_features = model.classifier[1].channels
+        model.classifier[1] = torch.nn.Linear(num_features, n_classes)
+    elif any(x in model_name for x in ['efficientnet', 'mobilenet_v2']):
         num_features = model.classifier[1].in_features
-        features = list(model.classifier.children())[:-1] # Remove last layer
-        features.extend([Linear(num_features, n_classes)]) # Add our layer with n_classes outputs
-        model.classifier = Sequential(*features) # Replace the model classifier
-    elif any(x in model_name for x in ['regnet']):
-        num_features = model.head.fc.in_features
-        model.head.fc = Linear(num_features, n_classes)
+        model.classifier[1] = torch.nn.Linear(num_features, n_classes)
+    elif any(x in model_name for x in ['googlenet', 'inception']):
+        num_features = model.fc.in_features
+        model.fc = torch.nn.Linear(num_features, n_classes)
+    elif any(x in model_name for x in ['swin', 'regnet']):
+        num_features = model.head.in_features
+        model.head = torch.nn.Linear(num_features, n_classes)
+    elif any(x in model_name for x in ['vit']):
+        num_features = model.heads[0].in_features
+        model.heads[0] = torch.nn.Linear(num_features, n_classes)
+    elif any(x in model_name for x in ['maxvit']):
+        num_features = model.classifier[-1].in_features
+        model.head = torch.nn.Linear(num_features, n_classes)
     elif any(x in model_name for x in ['squeezenet']):
-        # Final convolutional layer is the last layer of the classifier
-        num_features = model.classifier[-1].in_channels
-        model.classifier[-1] = Conv2d(num_features, n_classes, kernel_size=1, stride=1)
-        model.num_classes = n_classes
+        num_channels = 512 if '1_0' else 1024 # depends on squeezenet version 1.0 or 1.1
+        # replace the last convolutional layer with a new one with the desired number of output channels
+        # keep the same kernel size and stride as the original one
+        # see https://github.com/pytorch/vision/blob/main/torchvision/models/squeezenet.py#L104-L105
+        # and https://github.com/pytorch/vision/blob/main/torchvision/models/squeezenet.py#L118-L119
+        # for reference
+        last_conv_layer_index = -2 if '1_0' else -3 # depends on squeezenet version 1.0 or 1.1
+        last_conv_layer_old = list(model.classifier.children())[last_conv_layer_index]
+        last_conv_layer_new = torch.nn.Conv2d(
+            last_conv_layer_old.in_channels,
+            n_classes,
+            kernel_size=last_conv_layer_old.kernel_size,
+            stride=last_conv_layer_old.stride,
+            padding=last_conv_layer_old.padding,
+            bias=True,
+            groups=last_conv_layer_old.groups
+        )
+        model.classifier[last_conv_layer_index] = last_conv_layer_new
+    else:
+        raise ValueError(f'[ERROR]  could not load pretrained network because {model_name} model not found')
 
     return model
 

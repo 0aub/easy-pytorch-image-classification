@@ -22,12 +22,13 @@ if __name__ == '__main__':
     # save paths
     parser.add_argument("-lp",'--log_path', help='save log', default='./results/log/', type=str)
     parser.add_argument("-cp",'--checkpoints_path', help='save checkpoints', default='./results/checkpoints/', type=str)
+    parser.add_argument("-ep",'--evals_path', help='save evaluations', default='./results/evals/', type=str)
     # running option 
     parser.add_argument("-tr","--train", help="training option (default: False)", default=False, action="store_true")
     parser.add_argument("-ev","--eval", help="evaluation option (default: False)", default=False, action="store_true")
     parser.add_argument("-evs","--eval_summary", help="evaluation summary option (default: False)", default=False, action="store_true")
     # hyperparameters
-    parser.add_argument("-ep",'--epochs', help='training iteration number', default=100, type=int)
+    parser.add_argument("-epc",'--epochs', help='training iteration number', default=100, type=int)
     parser.add_argument("-bs",'--batch_size', help='training/evaluation batch size', default=16, type=int)
     parser.add_argument("-is",'--image_size', help='image size to resize', default=256, type=int)
     parser.add_argument("-lr",'--learning_rate', help='training learning rate ', default=0.0001, type=float)
@@ -69,6 +70,7 @@ if __name__ == '__main__':
     if not (args.train or args.eval or args.eval_summary):
         print('please run the file properly. for more information: https://github.com/0aub/pytorch-image-classification')
     if args.train or args.eval:
-        main(args.exp, args.dataset_name, args.model_name, args.train, args.eval, not args.no_save, not args.no_overwrite, args.batch_size, args.image_size, args.learning_rate, args.epochs, not args.no_printing, False, args.checkpoints_path, args.log_path, comet)
+        main(args.exp, args.dataset_name, args.model_name, args.train, args.eval, not args.no_save, not args.no_overwrite, 
+             args.batch_size, args.image_size, args.learning_rate, args.epochs, not args.no_printing, False, args.checkpoints_path, args.log_path, args.evals_path, comet)
     if args.eval_summary:
         evaluation_summary(args.exp, args.dataset_name, args.batch_size, args.avg_num, args.log_path, args.checkpoints_path)

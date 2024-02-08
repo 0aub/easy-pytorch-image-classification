@@ -65,7 +65,7 @@ class ImageDataset():
             sparseresidential
             storagetanks
     """
-    def __init__(self, dataset_name='ucmerced', batch_size=16, image_size=256, printing=False):
+    def __init__(self, dataset_name='ucmerced', batch_size=16, image_size=256, printing=False, split_ratio=(0.8, 0.2)):
         # fixed paths
         base_download_path = 'data/compressed/'
         base_images_folder_path = 'data/uncompressed/'
@@ -94,26 +94,40 @@ class ImageDataset():
         self.unzip_path = base_images_folder_path
         self.splitted_data_path = os.path.join(base_splitted_data_path, dataset_name)
         self.length = self._count_datafiles()
+        self.split_ratio = split_ratio
+        if len(self.split_ratio) == 2:
+            self.splits = ['train', 'val']
+        elif len(self.split_ratio) == 3:
+            self.splits = ['train', 'val', 'test']
+        else: 
+            raise ValueError(f'[ERROR]  wrong split ratio: {self.split_ratio}')
         self.dataloaders, self.dataset_sizes, self.classes = self._get_data(batch_size, image_size, printing)
 
     def _get_data(self, batch_size, image_size, printing):
         # chack for data availability
         if not os.path.exists(os.path.join(self.splitted_data_path, 'train')):
             self._split()
-        self._clean()
+        # self._clean()
 
         # transforms (data augmentation)
         data_transforms = {
             'train': transforms.Compose([
+                # transforms.RandomResizedCrop(image_size),
                 transforms.Resize((image_size, image_size)),
                 transforms.RandomHorizontalFlip(),
+                transforms.RandomVerticalFlip(),
                 transforms.ToTensor(),
-                transforms.Normalize([0.5], [0.5])
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
             ]),
             'val': transforms.Compose([
                 transforms.Resize((image_size, image_size)),
                 transforms.ToTensor(),
-                transforms.Normalize([0.5], [0.5])
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+            ]),
+            'test': transforms.Compose([
+                transforms.Resize((image_size, image_size)),
+                transforms.ToTensor(),
+                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
             ])
         }
         # initialize dataseta
@@ -122,7 +136,7 @@ class ImageDataset():
                 os.path.join(self.splitted_data_path, x), 
                 transform=data_transforms[x]
             )
-            for x in ['train', 'val']
+            for x in self.splits
         }
         # initialize dataloaders
         dataloaders = {
@@ -130,13 +144,13 @@ class ImageDataset():
                 image_datasets[x], batch_size=batch_size,
                 shuffle=True, num_workers=2,
             )
-            for x in ['train', 'val']
+            for x in self.splits
         }
         # printing
-        dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
+        dataset_sizes = {x: len(image_datasets[x]) for x in self.splits}
         classes = image_datasets['train'].classes
         if printing:
-            for x in ['train', 'val']:
+            for x in self.splits:
                 print("[INFO]  Loaded {} images under {}".format(dataset_sizes[x], x))
             print("[INFO]  Classes: ", ''.join(['\n\t\t'+i for i in classes]), '\n\n')
         # return dataloaders to use it in the training
@@ -152,7 +166,7 @@ class ImageDataset():
         if not os.path.exists(self.images_folder_path):
             os.makedirs(self.images_folder_path)
         import splitfolders
-        splitfolders.ratio(self.images_folder_path, output=self.splitted_data_path, ratio=(0.8, 0.2), seed=1998)
+        splitfolders.ratio(self.images_folder_path, output=self.splitted_data_path, ratio=self.split_ratio, seed=1998)
         print('')
 
     def _download(self):
@@ -200,3 +214,7 @@ class ImageDataset():
             print('\n[INFO]  1 file has been removed. check {} for more details.'.format(log_path))
         else:
             print('\n[INFO]  {} files have been removed. check {} for more details.'.format(removed, log_path))
+
+
+if __name__ == "__main__":
+    dataset = ImageDataset(dataset_name='NCT-CRC-HE-100K', batch_size=16, image_size=256, printing=True, split_ratio=(0.8, 0.1, 0.1))
