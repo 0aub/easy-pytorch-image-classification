@@ -1,6 +1,6 @@
 # Easy PyTorch Image Classification
 
-This repository aims to simplify and automate the process of training and evaluating deep learning models for image classification tasks using PyTorch. Whether you are a beginner or an experienced practitioner, our goal is to make your journey in training deep learning models as smooth and efficient as possible.
+This repository aims to simplify and automate the process of training and evaluating deep learning models for image classification tasks using PyTorch. Whether you are a beginner or an experienced practitioner, The goal is to make your journey in training deep learning models as smooth and efficient as possible.
 
 ## Key Features
 - **Automated Data Handling:** Automatically handles datasets whether they are compressed, uncompressed but not split, or already split. The repository intelligently processes your data based on its current state, saving you the hassle of manual preparation.
@@ -65,7 +65,7 @@ This repository is designed to automate the dataset preparation process:
 - The default split ratio is 0.8:0.2 for training and validation sets, respectively. The script takes care of unzipping and splitting the dataset automatically, preparing it for training and evaluation.
 
 Suggestions and Issues
-Feel free to drop any suggestions, comments, or report issues you encounter. Your input helps me improve and make this repository more beneficial for everyone in the community.
+Feel free to drop any suggestions, comments, or report issues you encounter. Your input helps this repository to be more beneficial for everyone in the community.
 
 
 
