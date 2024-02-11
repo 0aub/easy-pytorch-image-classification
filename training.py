@@ -259,7 +259,7 @@ def evaluation_summary(exp, dataset_name, batch_size, avg_num=10, summary_save_p
     # get path of all models that contains the entered init, model, and epochs 
     models_paths = [checkpoints_path + name for name in os.listdir(checkpoints_path) if dataset_name in name and exp in name]
     # get dataset object
-    dataset = ImageDataset(dataset_name, 16, printing=False)
+    dataset = ImageDataset(dataset_name, batch_size, printing=False)
     # define loss function
     criterion = CrossEntropyLoss()
     # try to use gpu

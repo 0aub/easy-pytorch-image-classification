@@ -65,14 +65,14 @@ class ImageDataset():
             sparseresidential
             storagetanks
     """
-    def __init__(self, dataset_name='ucmerced', batch_size=16, image_size=256, printing=False, split_ratio=(0.8, 0.2)):
+    def __init__(self, dataset_name='ucmerced', batch_size=16, image_size=256, printing=False, aug=True, split_ratio=(0.8, 0.2)):
         # fixed paths
         base_download_path = 'data/compressed/'
         base_images_folder_path = 'data/uncompressed/'
         base_splitted_data_path = 'data/splitted/'
-        # lowercase user input
+        # prepare the class params
+        self.aug = aug
         dataset_name = dataset_name.lower()
-        # properties setup
         if dataset_name == 'ucmerced':
             self.download_link = 'http://weegee.vision.ucmerced.edu/datasets/UCMerced_LandUse.zip'
             self.images_folder_path = os.path.join(base_images_folder_path, 'UCMerced_LandUse/Images')
@@ -102,6 +102,7 @@ class ImageDataset():
             self.splits = ['train', 'val', 'test']
         else: 
             raise ValueError(f'[ERROR]  wrong split ratio: {self.split_ratio}')
+        
         self.dataloaders, self.dataset_sizes, self.classes = self._get_data(batch_size, image_size, printing)
 
     def _get_data(self, batch_size, image_size, printing):
@@ -115,8 +116,8 @@ class ImageDataset():
             'train': transforms.Compose([
                 # transforms.RandomResizedCrop(image_size),
                 transforms.Resize((image_size, image_size)),
-                transforms.RandomHorizontalFlip(),
-                transforms.RandomVerticalFlip(),
+                transforms.RandomHorizontalFlip() if self.aug else transforms.Identity(),
+                transforms.RandomVerticalFlip() if self.aug else transforms.Identity(),
                 transforms.ToTensor(),
                 transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
             ]),
@@ -218,4 +219,4 @@ class ImageDataset():
 
 
 if __name__ == "__main__":
-    dataset = ImageDataset(dataset_name='NCT-CRC-HE-100K', batch_size=16, image_size=256, printing=True, split_ratio=(0.8, 0.1, 0.1))
+    dataset = ImageDataset(dataset_name='NCT-CRC-HE-100K', batch_size=16, image_size=256, printing=True, aug=True, split_ratio=(0.8, 0.1, 0.1))
