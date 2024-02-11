@@ -1,6 +1,6 @@
 # Easy PyTorch Image Classification
 
-Welcome to the "Easy PyTorch Image Classification" GitHub repository! This repository aims to simplify and automate the process of training and evaluating deep learning models for image classification tasks using PyTorch. Whether you are a beginner or an experienced practitioner, our goal is to make your journey in training deep learning models as smooth and efficient as possible.
+This repository aims to simplify and automate the process of training and evaluating deep learning models for image classification tasks using PyTorch. Whether you are a beginner or an experienced practitioner, our goal is to make your journey in training deep learning models as smooth and efficient as possible.
 
 ## Key Features
 - **Automated Data Handling:** Automatically handles datasets whether they are compressed, uncompressed but not split, or already split. The repository intelligently processes your data based on its current state, saving you the hassle of manual preparation.
