@@ -9,22 +9,43 @@ This repository aims to simplify and automate the process of training and evalua
 - **Simplified Usage:** Designed to be used with minimal parameters for quick setup, yet flexible enough to allow for detailed customization when needed.
 
 ## Usage
-The main script of this repository is designed to be both powerful and user-friendly, allowing for customization through a variety of parameters:
+The main script of this repository is designed to be both powerful and user-friendly, allowing for customization through a variety of parameters, grouped by their functionality:
 
-- `-exp`, `--experiment_name`: Specify the experiment name for easy tracking.
-- `-dn`, `--dataset_name`: The name of the dataset or the folder name if your data is in "./data/compressed/" (for zipped datasets) or "./data/uncompressed/" (for unzipped datasets).
-- `-mn`, `--model_name`: The model you wish to train. Should be one of the models available in PyTorch's torchvision models.
-- `-lp`, `--log_path`: Path to save training logs.
-- `-cp`, `--checkpoints_path`: Path to save model checkpoints.
-- `-ep`, `--evals_path`: Path to save evaluation summaries.
-- `-tr`, `--train`: Flag to enable model training.
-- `-ev`, `--eval`: Flag to enable model evaluation.
-- `-epc`, `--epochs`: Number of training epochs.
-- `-bs`, `--batch_size`: Batch size for training/evaluation.
-- `-is`, `--image_size`: Image size to resize.
-- `-aug`, `--augmentation`: Flag to enable/disable data augmentation.
-- `-lr`, `--learning_rate`: Learning rate for training.
-- `-uc`, `--use-comet`: Flag to enable Comet ML for tracking experiments.
+### Basic Settings
+- `-exp`, `--experiment_name`: Specify the experiment name for easy tracking. Default: 'exp'.
+- `-dn`, `--dataset_name`: The name of the dataset or the folder name. Use the dataset's name if your data is in "./data/compressed/" (for zipped datasets) or "./data/uncompressed/" (for unzipped datasets). Default: 'ucmerced'.
+- `-mn`, `--model_name`: The model you wish to train, should be one of the models available in PyTorch's torchvision models. Default: 'mobilenet_v2'.
+
+### Save Paths
+- `-lp`, `--log_path`: Path to save training logs. Default: './results/log/'.
+- `-cp`, `--checkpoints_path`: Path to save model checkpoints. Default: './results/checkpoints/'.
+- `-ep`, `--evals_path`: Path to save evaluation summaries. Default: './results/evals/'.
+
+### Running Options
+- `-tr`, `--train`: Flag to enable model training. Default: False.
+- `-ev`, `--eval`: Flag to enable model evaluation. Default: False.
+- `-evs`, `--eval_summary`: Flag to generate an evaluation summary. Default: False.
+
+### Hyperparameters
+- `-epc`, `--epochs`: Number of training epochs. Default: 100.
+- `-bs`, `--batch_size`: Batch size for training/evaluation. Default: 16.
+- `-is`, `--image_size`: Image size to resize. Default: 256.
+- `-no-aug`, `--no-augmentation`: Flag to disable data augmentation. Default: False
+- `-lr`, `--learning_rate`: Learning rate for training. Default: 0.0001.
+
+### Additional Options
+- `-nsv`, `--no-save`: Do not save the model and training history. Default: False.
+- `-now`, `--no-overwrite`: Prevent overwriting existing models with the same name. Default: False.
+- `-npr`, `--no-printing`: Disable printing of progress and details. Default: False.
+- `-an`, `--avg_num`: Number of evaluations for averaging in summary. Default: 10.
+
+### Comet ML Integration
+- `-uc`, `--use-comet`: Use Comet ML to track and store your training progress. Default: False.
+- `-cpn`, `--comet-project-name`: Specify your Comet ML project name. Default: None.
+- `-cws`, `--comet-workspace`: Specify your Comet ML workspace. Default: None.
+- `-cen`, `--comet-experiment-name`: Specify the Comet ML experiment name. Default: None.
+- `-cak`, `--comet-api-key`: Your Comet ML API key. Default: None.
+
 
 ### Minimal Setup Example
 To get started with the minimal number of parameters for training a model on a dataset named "ucmerced", with MobileNet v2 as the model:
